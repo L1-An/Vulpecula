@@ -29,6 +29,7 @@ taboolib {
     description {
         contributors {
             name("Lanscarlos")
+            name("L1An")
         }
         desc("A Kether Script Extension System for TabooLib")
         dependencies {
