@@ -11,6 +11,9 @@ object ActionAnimatorSwitch : ActionAnimator.Resolver {
 
     override val name = arrayOf("switch")
 
+    /**
+     * animator switch {target}
+     */
     override fun resolve(reader: ActionAnimator.Reader): Bacikal.Parser<Any?> {
         return reader.run {
             combine(

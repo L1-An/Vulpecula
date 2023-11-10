@@ -96,9 +96,6 @@ object ActionUnicode {
     /**
      * 将给定数字分割成一组特定数字之和
      * */
-    /**
-     * 将给定数字分割成一组特定数字之和
-     * */
     private fun splitNumber(target: Int): List<Int> {
         val result = mutableListOf<Int>()
         var remaining = target

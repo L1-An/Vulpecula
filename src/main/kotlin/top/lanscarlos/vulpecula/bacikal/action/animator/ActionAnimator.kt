@@ -15,6 +15,7 @@ import top.lanscarlos.vulpecula.internal.ClassInjector
 import top.lanscarlos.vulpecula.utils.getVariable
 import top.lanscarlos.vulpecula.utils.playerOrNull
 import top.lanscarlos.vulpecula.utils.toBukkit
+import java.util.*
 import java.util.concurrent.CompletableFuture
 import java.util.function.Supplier
 
@@ -42,7 +43,7 @@ class ActionAnimator : QuestAction<Any?>()  {
         private val registry = mutableMapOf<String, Resolver>()
 
         /**
-         * 向 Inventory 语句注册子语句
+         * 向 Animator 语句注册子语句
          * @param resolver 子语句解析器
          * */
         fun registerResolver(resolver: Resolver) {
@@ -72,6 +73,45 @@ class ActionAnimator : QuestAction<Any?>()  {
         fun parser() = ScriptActionParser<Any?> {
             ActionAnimator().resolve(this)
         }
+
+        /**
+         * 存储玩家的一些数据
+         */
+        val globalPlayerContext : MutableMap<UUID, MutableMap<String, Any>> = mutableMapOf()
+
+        /**
+         * 使用这个函数来为特定玩家在Context中存储值
+         */
+        fun storeInPlayerContext(playerUUID: UUID, key: String, value: Any) {
+            val playerContext = globalPlayerContext.getOrPut(playerUUID) { mutableMapOf() }
+            playerContext[key] = value
+        }
+
+        /**
+         * 使用这个函数来从特定玩家的Context中检索值
+         */
+        fun <T> retrieveFromPlayerContext(playerUUID: UUID, key: String): T? {
+            val playerContext = globalPlayerContext[playerUUID] ?: return null
+            @Suppress("UNCHECKED_CAST")
+            return playerContext[key] as? T
+        }
+
+        /**
+         * 使用这个函数来检查特定玩家的Context中是否存在值
+         */
+        fun isValueInPlayerContext(playerUUID: UUID, key: String): Boolean {
+            val playerContext = globalPlayerContext[playerUUID]
+            return playerContext?.containsKey(key) ?: false
+        }
+
+        /**
+         * 使用这个函数来从特定玩家的Context中移除值
+         */
+        fun removeFromPlayerContext(playerUUID: UUID, key: String) {
+            val playerContext = globalPlayerContext[playerUUID]
+            playerContext?.remove(key)
+        }
+
     }
 
     /**
